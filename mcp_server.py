@@ -88,7 +88,7 @@ def make_server(token):
         try:
             if name == 'mochi_state':
                 s = call_api('/state', token=token)
-                text = f"饱食:{s.get('hunger')} 心情:{s.get('happy')} 活力:{s.get('energy')} 清洁:{s.get('clean')} 金币:{s.get('coins')} Lv:{s.get('job_level',0)+1} 住院:{s.get('hospitalized')} 上锁:{s.get('locked')}"
+                text = f"饱食:{round(s.get('hunger',0),1)} 心情:{round(s.get('happy',0),1)} 活力:{round(s.get('energy',0),1)} 清洁:{round(s.get('clean',0),1)} 金币:{s.get('coins')} Lv:{s.get('job_level',0)+1} 住院:{s.get('hospitalized')} 上锁:{s.get('locked')}"
                 bag = s.get('bag',{})
                 if bag:
                     text += f" 背包:{bag}"

@@ -593,7 +593,7 @@ function renderState(s){
 }
 
 function setStat(key,v){
-  document.getElementById(key+'Val').textContent=v;
+  document.getElementById(key+"Val").textContent=Math.round(v*10)/10;
   document.getElementById(key+'Bar').style.width=v+'%';
   const bar=document.getElementById(key+'Bar');
   const label=document.getElementById(key+'Label');

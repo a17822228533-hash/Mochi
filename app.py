@@ -79,7 +79,10 @@ def clamp(v, lo=0, hi=100):
 
 def decay_state(s):
     now = time.time()
-    last = s.get('last_decay', now)
+    last = s.get("last_decay")
+    if last is None:
+        s["last_decay"] = now
+        return s
     hours = (now - last) / 3600
     if hours < 0.1:
         return s
@@ -95,7 +98,7 @@ def check_work_done(s):
         return {}
     if s.get('working') and s.get('work_end_time'):
         if time.time() >= s['work_end_time']:
-            job = JOBS[s.get('job_level',0)]
+            job = JOBS[s.get('job_level') or 0]
             s['coins'] = s.get('coins',0) + job['income']
             s['working'] = False
             s['work_end_time'] = None
@@ -209,13 +212,13 @@ def action():
     if act == 'work':
         if s.get('working'):
             return jsonify({'ok':False,'msg':'还在打工中'})
-        job = JOBS[s.get('job_level',0)]
+        job = JOBS[s.get('job_level') or 0]
         s['working'] = True
         s['work_end_time'] = time.time() + job['time']
         msg = f"{cn}开始打工（{job['name']}），{job['time']//60}分钟后收工"
         add_log(s, f'💼 开始打工（{job["name"]}），{job["time"]//60}分钟后收工')
     elif act == 'upgrade':
-        lv = s.get('job_level',0)
+        lv = s.get('job_level') or 0
         if lv >= 4:
             return jsonify({'ok':False,'msg':'已经是CEO了'})
         cost = UPGRADE_COSTS[lv]
@@ -271,7 +274,9 @@ def action():
         msg = f'{hn}上锁了' if s['locked'] else f'{hn}解锁了'
     elif act == 'event':
         key = data.get('key')
-        delta = int(data.get('delta',0))
+        if key not in ('coins','multi','hunger','happy','energy','clean'):
+            return jsonify({'ok':False,'msg':'非法事件key'})
+        delta = int(data.get('delta') or 0)
         if key == 'coins':
             s['coins'] = max(0, s.get('coins',0)+delta)
         elif key == 'multi':
