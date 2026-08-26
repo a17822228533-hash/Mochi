@@ -1,7 +1,7 @@
 services:
   - type: web
-    name: mochi-mcp
-    env: python
-    pythonVersion: "3.11"
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python mcp_server.py"
+    name: mochi-mcp-server
+    runtime: python
+    pythonVersion: "3.11.9"
+    buildCommand: pip install -r requirements.txt
+    startCommand: python mochi_mcp_server_backup.py
