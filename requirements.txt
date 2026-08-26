@@ -1,0 +1,6 @@
+flask
+flask-cors
+uvicorn
+mcp>=1.8,<2
+starlette
+httpx
