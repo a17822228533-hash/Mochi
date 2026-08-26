@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: mochi-mcp-server
-    runtime: python
-    pythonVersion: "3.11.9"
-    buildCommand: pip install -r requirements.txt
-    startCommand: "python mcp_server.py"
