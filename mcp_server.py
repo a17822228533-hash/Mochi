@@ -209,6 +209,7 @@ sse = SseServerTransport('/messages')
 # 自定义 ASGI 端点（替换原来的 handle_sse）
 async def sse_endpoint(scope, receive, send):
     """处理 /sse 连接，作为 ASGI 应用直接运行"""
+    print(f"SSE request received＂)
     # 从查询字符串获取 token
     query_string = scope.get("query_string", b"").decode()
     params = parse_qs(query_string)
@@ -229,4 +230,7 @@ starlette_app = Starlette(routes=[
 ])
 
 if __name__ == '__main__':
-    uvicorn.run(starlette_app, host='0.0.0.0', port=8766)
+    port = int(os.getenv("PORT", 8766))
+    print(f"Server starting on port {port}")
+    uvicorn.run(starlette_app, host='0.0.0.0', port=port)
+    
