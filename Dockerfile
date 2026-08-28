@@ -10,4 +10,4 @@ COPY . .
 ENV PORT=5001
 EXPOSE 5001
 
-CMD ["python", "mcp_server.py"]
+CMD ["python", "app.py"]
