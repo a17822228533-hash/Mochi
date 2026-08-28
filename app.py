@@ -118,20 +118,19 @@ def index():
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.json
-    invite = data.get('invite_code','')
-    username = data.get('username','').strip()
-    password = data.get('password','')
-    human_name = data.get('human_name','用户')
-    call_name = data.get('call_name','老公')
+    username = data.get('username', '').strip()
+    password = data.get('password', '')
+    human_name = data.get('human_name', '用户')
+    call_name = data.get('call_name', '老公')
+    
     if not username or not password:
-        return jsonify({'ok':False,'msg':'用户名和密码不能为空'})
-    invites = read_json(DATA_DIR+'/invites.json', {})
-    if invite not in invites or invites[invite].get('used'):
-        return jsonify({'ok':False,'msg':'邀请码无效'})
+        return jsonify({'ok': False, 'msg': '用户名和密码不能为空'})
+    
     users = read_json(USERS_FILE, {})
     for u in users.values():
         if u['username'] == username:
-            return jsonify({'ok':False,'msg':'用户名已存在'})
+            return jsonify({'ok': False, 'msg': '用户名已存在'})
+    
     uid = gen_token()[:8]
     token = gen_token()
     users[uid] = {
@@ -143,12 +142,17 @@ def register():
         'created': time.time()
     }
     write_json(USERS_FILE, users)
-    invites[invite]['used'] = True
-    invites[invite]['used_by'] = uid
-    write_json(DATA_DIR+'/invites.json', invites)
+    
     s = copy.deepcopy(DEFAULT_STATE)
     save_state(uid, s)
-    return jsonify({'ok':True,'token':token,'uid':uid,'human_name':human_name,'call_name':call_name})
+    
+    return jsonify({
+        'ok': True,
+        'token': token,
+        'uid': uid,
+        'human_name': human_name,
+        'call_name': call_name
+    })
 
 @app.route('/api/login', methods=['POST'])
 def login():
