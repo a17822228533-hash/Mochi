@@ -118,6 +118,7 @@ def index():
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.json
+    data['invite_code'] = data.get('invite_code', 'dev123')
     username = data.get('username', '').strip()
     password = data.get('password', '')
     human_name = data.get('human_name', '用户')
